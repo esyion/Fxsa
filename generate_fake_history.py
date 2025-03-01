@@ -14,8 +14,8 @@ if not os.path.exists(".git"):
 os.environ["GIT_AUTHOR_NAME"] = "esyion"
 os.environ["GIT_AUTHOR_EMAIL"] = "qingboup@gmail.com"
 
-START_DATE = datetime(2026, 3, 1)
-END_DATE = datetime(2026, 4, 28)
+START_DATE = datetime(2025, 3, 1)
+END_DATE = datetime(2026, 3, 1)
 current = START_DATE
 
 while current <= END_DATE:
