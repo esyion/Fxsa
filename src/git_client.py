@@ -56,6 +56,10 @@ class GitClient:
 
         env = {
             **os.environ,
+            "GIT_AUTHOR_NAME": self.config.author_name,
+            "GIT_AUTHOR_EMAIL": self.config.author_email,
+            "GIT_COMMITTER_NAME": self.config.author_name,
+            "GIT_COMMITTER_EMAIL": self.config.author_email,
             "GIT_AUTHOR_DATE": author_date,
             "GIT_COMMITTER_DATE": author_date,
         }
@@ -66,7 +70,7 @@ class GitClient:
             env=env,
         )
         if result.returncode != 0:
-            raise RuntimeError(f"Commit failed: {result.stderr}")
+            raise RuntimeError(f"Commit failed: {result.stderr or result.stdout}")
 
     def get_commit_count(self) -> int:
         """获取提交数量"""
