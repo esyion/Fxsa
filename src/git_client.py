@@ -1,6 +1,7 @@
 """Git 操作封装模块"""
 import os
 import subprocess
+import uuid
 from datetime import date
 from pathlib import Path
 
@@ -48,9 +49,9 @@ class GitClient:
         """创建提交"""
         author_date = f"{commit_date.isoformat()} {self.config.hour}:00:00"
 
-        # 确保有文件变更（每次内容不同）
+        # 确保有文件变更（每次内容不同，添加 UUID）
         marker_file = self.repo_path / ".commit_marker"
-        marker_file.write_text(f"{message} at {author_date}\n")
+        marker_file.write_text(f"{message} | {uuid.uuid4()}\n")
 
         self._run_git("add", ".")
 
