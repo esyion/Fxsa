@@ -12,12 +12,12 @@ class GitClient:
 
     def __init__(self, config: Settings):
         self.config = config
-        self.repo_path = config.repo_path
+        self.repo_path = config.REPO_PATH
 
     def _run_git(self, *args: str) -> subprocess.CompletedProcess:
         """执行 git 命令"""
         cmd = ["git", "-C", str(self.repo_path)] + list(args)
-        result = subprocess.run(cmd, capture_output=True, text=True)
+        result = subprocess.run(cmd,  capture_output=True, text=True)
         if result.returncode != 0:
             raise RuntimeError(f"Git error: {result.stderr}")
         return result
@@ -28,8 +28,16 @@ class GitClient:
             self._run_git("init")
             self._run_git("checkout", "-b", self.config.branch)
         else:
-            # 确保在正确的分支
-            self._run_git("checkout", self.config.branch)
+            # 检查分支是否存在，不存在则创建
+            result = subprocess.run(
+                ["git", "-C", str(self.repo_path), "rev-parse", "--verify", f"refs/heads/{self.config.branch}"],
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode == 0:
+                self._run_git("checkout", self.config.branch)
+            else:
+                self._run_git("checkout", "-b", self.config.branch)
 
     def setup_author(self) -> None:
         """设置 git 作者信息"""

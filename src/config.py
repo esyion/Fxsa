@@ -1,7 +1,7 @@
 """配置管理模块"""
 from datetime import date
 from pathlib import Path
-from typing import Optional
+from typing import ClassVar
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -24,10 +24,12 @@ class Settings(BaseSettings):
     start_date: date = Field(default=date(2026, 1, 1), description="开始日期")
     end_date: date = Field(default=date(2026, 1, 31), description="结束日期")
     commits_per_day: int = Field(default=1, ge=1, description="每天提交次数")
-    commit_template: str = Field(default="Update on {date}", description="提交消息模板")
-    repo_path: Path = Field(default=Path("."), description="仓库路径")
     branch: str = Field(default="main", description="分支名")
     hour: int = Field(default=12, ge=0, le=23, description="提交小时 (0-23)")
+
+    # 内置常量
+    COMMIT_TEMPLATE: ClassVar[str] = "Update on {date}"
+    REPO_PATH: ClassVar[Path] = Path(".")
 
     def validate_dates(self) -> None:
         """验证日期范围"""
@@ -46,4 +48,4 @@ class Settings(BaseSettings):
 
     def format_commit_message(self, commit_date: date) -> str:
         """格式化提交消息"""
-        return self.commit_template.format(date=commit_date.isoformat())
+        return self.COMMIT_TEMPLATE.format(date=commit_date.isoformat())
