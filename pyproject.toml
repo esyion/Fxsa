@@ -1,7 +1,14 @@
 [project]
 name = "fxsa-commit"
 version = "0.1.0"
-description = "Fxsa-commit"
+description = "生成假 git 提交历史的 CLI 工具"
 readme = "README.md"
-requires-python = ">=3.13"
-dependencies = []
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "python-dotenv>=1.0",
+]
+
+[project.scripts]
+fxsa-commit = "src.main:main"
