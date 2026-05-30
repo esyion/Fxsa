@@ -40,7 +40,7 @@ Repository = "https://github.com/esyion/fake-commit"
 Issues = "https://github.com/esyion/fake-commit/issues"
 
 [project.scripts]
-fc = "src.main:main"
+fcmt = "src.main:main"
 
 [build-system]
 requires = ["hatchling"]

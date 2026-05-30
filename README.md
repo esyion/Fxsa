@@ -12,19 +12,17 @@ fake-commit
 
 ## 安装
 
-```bash
-pip install fake-commit
-```
-
-或使用 uv：
+推荐使用 uv 安装：
 
 ```bash
-uv pip install fake-commit
+uv tool install fake-commit
 ```
 
 或直接从源码安装：
 
 ```bash
+git clone https://github.com/esyion/fake-commit.git
+cd fake-commit
 uv tool install .
 ```
 
@@ -32,12 +30,6 @@ uv tool install .
 
 ```bash
 uv tool uninstall fake-commit
-```
-
-或通过 pip：
-
-```bash
-pip uninstall fake-commit
 ```
 
 ## 配置
@@ -91,7 +83,7 @@ python -m src.main
 或安装后：
 
 ```bash
-fc -n "用户名" -e "email@example.com"
+fcmt -n "用户名" -e "email@example.com"
 ```
 
 ## 示例输出
