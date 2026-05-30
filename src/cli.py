@@ -10,6 +10,7 @@ from .git_client import GitClient
 
 
 @click.command()
+@click.version_option(version="0.1.3")
 @click.option("--author-name", "-n", required=True, help="Git 提交用户名,必须是github账号的用户名")
 @click.option("--author-email", "-e", required=True, help="Git 提交邮箱,必须是github账号的邮箱")
 @click.option("--start-date", "-s", default=None, help="开始日期 (YYYY-MM-DD)")
