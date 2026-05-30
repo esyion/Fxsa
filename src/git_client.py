@@ -85,7 +85,8 @@ class GitClient:
 
         total_commits = 0
         for commit_date in self.config.get_date_range():
-            for _ in range(self.config.commits_per_day):
+            commits_count = self.config.get_commits_per_day()
+            for _ in range(commits_count):
                 message = self.config.format_commit_message(commit_date)
                 self.commit(message, commit_date)
                 total_commits += 1
