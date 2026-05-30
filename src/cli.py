@@ -10,8 +10,8 @@ from .git_client import GitClient
 
 
 @click.command()
-@click.option("--author-name", "-n", required=True, help="Git 提交用户名")
-@click.option("--author-email", "-e", required=True, help="Git 提交邮箱")
+@click.option("--author-name", "-n", required=True, help="Git 提交用户名,必须是github账号的用户名")
+@click.option("--author-email", "-e", required=True, help="Git 提交邮箱,必须是github账号的邮箱")
 @click.option("--start-date", "-s", default=None, help="开始日期 (YYYY-MM-DD)")
 @click.option("--end-date", "-d", default=None, help="结束日期 (YYYY-MM-DD)")
 @click.option("--commits-per-day", "-c", default=1, type=int, help="每天提交次数")
@@ -19,6 +19,8 @@ from .git_client import GitClient
 @click.option("--random-mode", is_flag=True, help="启用随机提交模式")
 @click.option("--random-range", default="1,10", help="随机区间，格式 'min,max'")
 @click.option("--repo", "-r", default=".", help="仓库路径")
+@click.option("--remote", default=None, help="远程仓库 URL")
+@click.option("--push", is_flag=True, help="生成后推送到远程")
 def cli(
     author_name: str,
     author_email: str,
@@ -29,6 +31,8 @@ def cli(
     random_mode: bool,
     random_range: str,
     repo: str,
+    remote: str | None,
+    push: bool,
 ) -> int:
     """生成假 git 提交历史的 CLI 工具"""
     try:
@@ -45,6 +49,8 @@ def cli(
             branch=branch,
             random_mode=random_mode,
             random_range=random_range,
+            remote_url=remote,
+            push_to_remote=push,
         )
 
         repo_path = Path(repo)
@@ -52,6 +58,8 @@ def cli(
         click.echo(f"作者: {config.author_name} <{config.author_email}>")
         click.echo(f"日期范围: {config.start_date} - {config.end_date}")
         click.echo(f"仓库: {repo_path.absolute()}")
+        if config.remote_url:
+            click.echo(f"远程仓库: {config.remote_url}")
 
         client = GitClient(config, repo_path)
         count = client.run()

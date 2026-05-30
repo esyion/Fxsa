@@ -33,6 +33,11 @@ class Settings(BaseSettings):
     random_mode: bool = Field(default=False, description="随机提交开关")
     random_range: str = Field(default="1,10", description="随机区间，格式 'min,max'")
 
+    # 远程仓库配置
+    remote_url: str | None = Field(default=None, description="远程仓库 URL")
+    remote_name: str = Field(default="origin", description="远程仓库名称")
+    push_to_remote: bool = Field(default=False, description="生成后推送到远程")
+
     # 内置常量
     COMMIT_TEMPLATE: ClassVar[str] = "Update on {date}"
     REPO_PATH: ClassVar[Path] = Path(".")

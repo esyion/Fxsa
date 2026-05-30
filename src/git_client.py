@@ -80,10 +80,26 @@ class GitClient:
         result = self._run_git("rev-list", "--count", "HEAD")
         return int(result.stdout.strip())
 
+    def add_remote(self, name: str, url: str) -> None:
+        """添加或更新远程仓库"""
+        result = subprocess.run(
+            ["git", "-C", str(self.repo_path), "remote", "get-url", name],
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode == 0:
+            self._run_git("remote", "set-url", name, url)
+        else:
+            self._run_git("remote", "add", name, url)
+
+    def push_to_remote(self, remote: str, branch: str) -> None:
+        """推送到远程仓库"""
+        self._run_git("push", "--set-upstream", remote, branch)
+
     def run(self) -> int:
         """执行提交生成"""
-        self.setup_author()
         self.init_repo()
+        self.setup_author()
 
         total_commits = 0
         for commit_date in self.config.get_date_range():
@@ -92,5 +108,10 @@ class GitClient:
                 message = self.config.format_commit_message(commit_date)
                 self.commit(message, commit_date)
                 total_commits += 1
+
+        if self.config.remote_url:
+            self.add_remote(self.config.remote_name, self.config.remote_url)
+        if self.config.push_to_remote and self.config.remote_url:
+            self.push_to_remote(self.config.remote_name, self.config.branch)
 
         return total_commits
