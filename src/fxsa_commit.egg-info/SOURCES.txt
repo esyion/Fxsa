@@ -1,0 +1,8 @@
+README.md
+pyproject.toml
+src/fxsa_commit.egg-info/PKG-INFO
+src/fxsa_commit.egg-info/SOURCES.txt
+src/fxsa_commit.egg-info/dependency_links.txt
+src/fxsa_commit.egg-info/entry_points.txt
+src/fxsa_commit.egg-info/requires.txt
+src/fxsa_commit.egg-info/top_level.txt
