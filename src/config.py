@@ -1,4 +1,5 @@
 """配置管理模块"""
+import random
 from datetime import date
 from pathlib import Path
 from typing import ClassVar
@@ -29,6 +30,10 @@ class Settings(BaseSettings):
     branch: str = Field(default="main", description="分支名")
     hour: int = Field(default=12, ge=0, le=23, description="提交小时 (0-23)")
 
+    # 随机模式配置
+    random_mode: bool = Field(default=False, description="随机提交开关")
+    random_range: str = Field(default="1,10", description="随机区间，格式 'min,max'")
+
     # 内置常量
     COMMIT_TEMPLATE: ClassVar[str] = "Update on {date}"
     REPO_PATH: ClassVar[Path] = Path(".")
@@ -51,3 +56,21 @@ class Settings(BaseSettings):
     def format_commit_message(self, commit_date: date) -> str:
         """格式化提交消息"""
         return self.COMMIT_TEMPLATE.format(date=commit_date.isoformat())
+
+    def parse_random_range(self) -> tuple[int, int]:
+        """解析随机区间"""
+        parts = self.random_range.split(",")
+        min_val = int(parts[0].strip())
+        max_val = int(parts[1].strip())
+        if min_val > max_val:
+            raise ValueError("random_range min must be <= max")
+        if min_val < 1:
+            raise ValueError("random_range min must be >= 1")
+        return (min_val, max_val)
+
+    def get_commits_per_day(self) -> int:
+        """获取每天提交次数"""
+        if self.random_mode:
+            min_val, max_val = self.parse_random_range()
+            return random.randint(min_val, max_val)
+        return self.commits_per_day
